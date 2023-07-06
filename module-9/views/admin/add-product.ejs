@@ -1,0 +1,24 @@
+<%- include('../layout/head') %>
+    <link rel="stylesheet" href="/admin.css">
+    </head>
+
+    <body>
+        <%- include('../layout/navbar') %>
+            <h3>In Admin Page</h3><br />
+            <form action='/admin/product' class="main-form" method='POST'>
+                <label for="title">Title</label><br>
+                <input type='text' name='title' id="title" /><br><br>
+
+                <label for="imageUrl">Image URL</label><br>
+                <input type='text' name='imageUrl' id="imageUrl" /><br><br>
+
+                <label for="title">Price</label><br>
+                <input type='number' name='price' id="price" /><br><br>
+
+                <label for="title">Description</label><br>
+                <textarea type='text' name='description' id="description" rows="5"></textarea>
+                <br><br><br>
+                <input type='submit' value="Add Product">
+            </form>
+
+            <%- include('../layout/tail') %>

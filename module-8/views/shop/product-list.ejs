@@ -1,0 +1,34 @@
+<%- include('../layout/head') %>
+  <link rel="stylesheet" href="shop.css">
+  </head>
+
+  <body>
+    <%- include('../layout/navbar') %>
+      <h3>In Home Page</h3><br />
+      <a href='/add-product'>Go To Add Product</a>
+      <div class="shop-container">
+        <% if(prods.length> 0) {
+          prods.forEach(product => { %>
+          <div class="mini-card">
+            <img alt="<%= product.title %>" src='<%= product.imageUrl %>'>
+            <h2>
+
+              <%= product.title %>
+            </h2>
+            <span>
+              <%= product.description.length < 100 ? product.description : product.description.substr(0,50) + "..." %>
+            </span>
+            <span>
+              Rs. <%= product.price %> /-
+            </span>
+            <div>
+              <a href="/shop/checkout">
+                <button>Checkout</button>
+              </a>
+            </div>
+          </div>
+          <% }) } else { %>
+            <h3>No Product is Available</h3>
+            <% } %>
+              <%- include('../layout/tail') %>
+      </div>

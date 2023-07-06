@@ -1,0 +1,32 @@
+<%- include('../layouts/head') %>
+    <link rel="stylesheet" href="/shop.css">
+    <link rel="stylesheet" href="/product-details.css">
+
+    </head>
+
+    <body>
+        <%- include('../layouts/navigation') %>
+            <% if(product) { %>
+                <div class="card">
+                    <h2>
+                        <%= product.title %>
+                    </h2>
+                    <img src="<%= product.imageUrl %>" alt="Heading Image">
+                    <div class="card-content">
+                        <p>
+                            <%= product.description %>
+                        </p>
+                        <p class="price">
+                            RS. <%= product.price %>/-
+                        </p>
+                        <form action="/shop/cart" method="post">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <input type="hidden" name="price" value="<%= product.price %>">
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+                <% } %>
+
+
+                    <%- include('../layouts/tail') %>

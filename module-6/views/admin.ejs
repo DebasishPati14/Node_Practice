@@ -1,0 +1,51 @@
+
+<%- include('Layouts/head') %>
+
+</head>
+<body>
+    <%- include('Layouts/navbar') %>
+
+
+    <h3>In Admin Page</h3><br />
+    <form action='/products' method='POST'>
+        <input type='text' name='productName' />
+        <button type='submit'>Add</button>
+    </form>
+
+<%- include('Layouts/tail') %>
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+     <link rel="stylesheet" href="admin.css">
+    <title><%= pageTitle %></title>
+</head>
+
+<body>
+
+    <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/user">User</a></li>
+        </ul>
+      </nav>
+
+    <h3>In Admin Page</h3><br />
+    <form action='/products' method='POST'>
+        <input type='text' name='productName' />
+        <button type='submit'>Add</button>
+    </form>
+</body>
+
+</html> -->

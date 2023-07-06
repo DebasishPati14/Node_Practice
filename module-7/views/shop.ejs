@@ -1,0 +1,75 @@
+<%- include('Layouts/head') %>
+  <link rel="stylesheet" href="user.css">
+  </head>
+
+  <body>
+    <%- include('Layouts/navbar') %>
+
+      <h3>In Home Page</h3><br />
+      <a href='/admin/add-product'>Go To Add Product</a>
+
+      <div class="container">
+        <% if(prods.length> 0) {
+          prods.forEach(product => { %>
+          <div class="mini-card">
+            <img src=https://source.unsplash.com/300x400?book alt="Image description">
+            <h2>
+              <%= product.title %>
+            </h2>
+            <p>Card description goes here.</p>
+            <span>Rs. 5/- </span>
+          </div>
+          <% }) } else { %>
+            <h3>No Product is Available</h3>
+            <% } %>
+              <%- include('Layouts/tail') %>
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+</head>
+<body>
+    <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/user">User</a></li>
+        </ul>
+      </nav>
+
+    <h3>In Home Page</h3><br />
+    <a href='/add-product'>Go To Add Product</a>
+
+    <% if(prods.length > 0) { %>
+        <div class="mini-card">
+            <img src=https://source.unsplash.com/300x400?book alt="Image description">
+            <h2> <% prods.productName %></h2>
+            <p>Card description goes here.</p>
+            <span>Rs. 5/- </span>
+          </div>
+        <% } else { %>
+            <h3>No Product is Available</h3>
+            <% } %>
+            </body>
+</html> -->
