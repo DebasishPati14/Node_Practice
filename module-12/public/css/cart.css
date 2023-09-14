@@ -1,28 +1,27 @@
- .row {
-     display: flex;
- }
+.row {
+  display: flex;
+}
 
- .column {
-     flex: 25%;
-     padding: 10px;
-     box-sizing: border-box;
- }
+.column {
+  flex: 25%;
+  padding: 10px;
+  box-sizing: border-box;
+}
 
- .image-column {
-     flex: 50%;
-     padding: 10px;
-     box-sizing: border-box;
- }
+.image-column {
+  flex: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+}
 
- img {
-     width: 100px;
-     height: 120px;
- }
+img {
+  width: 100px;
+  height: 120px;
+}
 
-
- .cart-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Optional, to vertically center the content */
-    padding: 10px; /* Optional, add padding for spacing */
+.cart-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Optional, to vertically center the content */
+  padding: 10px; /* Optional, add padding for spacing */
 }

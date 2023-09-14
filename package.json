@@ -6,7 +6,10 @@
   "scripts": {
     "start": "nodemon ./module-12/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "author": "\"Mr. Debasish\"",
   "license": "ISC",

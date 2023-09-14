@@ -1,7 +1,7 @@
-const http = require('http');
-const routeExport = require('./routeExport');
+const http = require('http')
+const routeExport = require('./routeExport')
 
-const server = http.createServer(routeExport);
+const server = http.createServer(routeExport)
 
 // const server = http.createServer((req, res) => {
 //     if (req.url === '/') {
@@ -21,4 +21,4 @@ const server = http.createServer(routeExport);
 //     res.write("</html>");
 //     res.end();
 // })
-server.listen('3000');
+server.listen('3000')
