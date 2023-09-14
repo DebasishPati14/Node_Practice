@@ -4,8 +4,9 @@
   "description": "\"Watching Videos and Practicing\"",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./module-12/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format:check": "prettier --check ."
   },
   "author": "\"Mr. Debasish\"",
   "license": "ISC",
@@ -14,6 +15,17 @@
     "ejs": "^3.1.9",
     "express": "^4.18.1",
     "express-handlebars": "^7.0.7",
+    "mongodb": "^6.0.0",
+    "node-notifier": "^10.0.1",
     "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.0.3"
   }
 }
