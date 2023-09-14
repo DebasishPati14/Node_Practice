@@ -1,32 +1,32 @@
 // const products = [];
-const Product = require('../models/product.model')
+const Product = require('../models/product.model');
 
 exports.addProduct = (req, res, next) => {
-  res.render('admin.ejs', { pageTitle: 'Admin' })
-}
+  res.render('admin.ejs', { pageTitle: 'Admin' });
+};
 
 exports.products = (req, res, next) => {
-  console.log(req.body)
-  const prods = new Product(req.body.productName)
-  prods.saveProduct()
+  console.log(req.body);
+  const prods = new Product(req.body.productName);
+  prods.saveProduct();
 
-  res.redirect('/shop/message')
-}
+  res.redirect('/shop/message');
+};
 
 exports.message = (req, res, next) => {
-  res.render('message.ejs', { pageTitle: 'Message' })
-}
+  res.render('message.ejs', { pageTitle: 'Message' });
+};
 
 exports.basePage = (req, res, next) => {
   Product.fetchAllProducts((products) => {
-    console.log(products)
+    console.log(products);
     res.render('shop.ejs', {
       pageTitle: 'Main',
-      prods: products
-    })
-  })
-}
+      prods: products,
+    });
+  });
+};
 
 exports.pageNotFound = (req, resp, next) => {
-  resp.send('Sorry Page Not Found')
-}
+  resp.send('Sorry Page Not Found');
+};

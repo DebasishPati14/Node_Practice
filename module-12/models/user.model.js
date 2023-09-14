@@ -1,18 +1,18 @@
-const mongodb = require('mongodb')
-const getDB = require('../utils/database').getDB
-const notifier = require('node-notifier')
-const Product = require('./product.model')
+const mongodb = require('mongodb');
+const getDB = require('../utils/database').getDB;
+const notifier = require('node-notifier');
+const Product = require('./product.model');
 
 module.exports = class User {
-  constructor (name, email, cartProducts, id) {
-    this._id = id
-    this.name = name
-    this.email = email
-    this.cartProducts = cartProducts
+  constructor(name, email, cartProducts, id) {
+    this._id = id;
+    this.name = name;
+    this.email = email;
+    this.cartProducts = cartProducts;
   }
 
-  save () {
-    const db = getDB()
+  save() {
+    const db = getDB();
     db.collection('users')
       .insertOne(this)
       .then((result) => {
@@ -20,40 +20,43 @@ module.exports = class User {
           title: 'Salutations!',
           message: JSON.stringify(result),
           sound: true,
-          wait: true
-        })
+          wait: true,
+        });
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   }
 
-  static saveProductsInCart (productId, price, user, callBack) {
-    const db = getDB()
+  static saveProductsInCart(productId, price, user, callBack) {
+    const db = getDB();
     const productIndex = user.cartDetails?.products?.findIndex(
-      (prod) => (new mongodb.ObjectId(prod.productId)).toString() === (new mongodb.ObjectId(productId.toString())).toString()
-    )
-    let updatedProduct = user.cartDetails?.products || []
-    let updatedCart = {}
+      (prod) =>
+        new mongodb.ObjectId(prod.productId).toString() ===
+        new mongodb.ObjectId(productId.toString()).toString()
+    );
+    let updatedProduct = user.cartDetails?.products || [];
+    let updatedCart = {};
     if (productIndex >= 0) {
       updatedProduct = updatedProduct.map((product) =>
-        (new mongodb.ObjectId(product.productId)).toString() === (new mongodb.ObjectId(productId)).toString()
+        new mongodb.ObjectId(product.productId).toString() ===
+        new mongodb.ObjectId(productId).toString()
           ? {
               quantity: (updatedProduct[productIndex].quantity += 1),
-              productId
+              productId,
             }
           : product
-      )
+      );
       updatedCart = {
         totalPrice: Number(user.cartDetails?.totalPrice || 0) + Number(price),
-        products: updatedProduct
-      }
+        products: updatedProduct,
+      };
     } else {
-      updatedProduct.push({ productId, quantity: 1 })
+      updatedProduct.push({ productId, quantity: 1 });
       updatedCart = {
         totalPrice: Number(user.cartDetails?.totalPrice || 0) + Number(price),
-        products: updatedProduct
-      }
+        products: updatedProduct,
+      };
     }
     db.collection('users')
       .findOneAndUpdate(
@@ -61,21 +64,21 @@ module.exports = class User {
         { $set: { cartDetails: updatedCart } }
       )
       .then((result) => {
-        callBack(result)
+        callBack(result);
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   }
 
-  deleteProductFromCart (productId, price, callBack) {
-    const db = getDB()
+  deleteProductFromCart(productId, price, callBack) {
+    const db = getDB();
     db.collection('users')
       .findOne({ _id: this._id })
       .then((result) => {
         const updatedProduct = result.cartDetails.products.filter(
           (prod) => prod.productId !== productId
-        )
+        );
         db.collection('users')
           .findOneAndUpdate(
             { _id: this._id },
@@ -84,37 +87,37 @@ module.exports = class User {
                 cartDetails: {
                   products: updatedProduct,
                   totalPrice:
-                    Number(result.cartDetails.totalPrice) - Number(price)
-                }
-              }
+                    Number(result.cartDetails.totalPrice) - Number(price),
+                },
+              },
             }
           )
           .then((data) => {
-            callBack(data)
-          })
-      })
+            callBack(data);
+          });
+      });
   }
 
-  getAllCartProducts (callBack) {
-    const db = getDB()
+  getAllCartProducts(callBack) {
+    const db = getDB();
     db.collection('users')
       .findOne({ _id: this._id })
       .then((result) => {
         getCartProducts(result.cartDetails?.products, (cb) => {
           const cartObject = {
             totalPrice: result.cartDetails?.totalPrice,
-            products: cb
-          }
-          callBack(cartObject || [])
-        })
+            products: cb,
+          };
+          callBack(cartObject || []);
+        });
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   }
 
-  static findUserById (userId, callBack) {
-    const db = getDB()
+  static findUserById(userId, callBack) {
+    const db = getDB();
     db.collection('users')
       .findOne({ _id: new mongodb.ObjectId(userId) })
       .then((result) => {
@@ -124,15 +127,15 @@ module.exports = class User {
         //     sound: true,
         //     wait: true
         // })
-        callBack(result)
+        callBack(result);
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   }
 
-  addOrder (callBack) {
-    const db = getDB()
+  addOrder(callBack) {
+    const db = getDB();
     this.getAllCartProducts((cartObject) => {
       db.collection('users')
         .findOneAndUpdate(
@@ -140,35 +143,39 @@ module.exports = class User {
           {
             $set: { cartDetails: {} },
             $push: {
-              orders: { $each: [cartObject] }
-            }
+              orders: { $each: [cartObject] },
+            },
           }
         )
         .then((result) => {
-          callBack(result)
-        })
+          callBack(result);
+        });
       db.collection('orders')
         .insertOne({
-          ...cartObject
+          ...cartObject,
         })
         .then((result) => {
-          callBack(result)
-        })
-    })
+          callBack(result);
+        });
+    });
   }
-}
+};
 
 const getCartProducts = (products, callBack) => {
-  let updatedProducts = []
+  let updatedProducts = [];
   Product.fetchAllProducts((allProducts) => {
     updatedProducts =
       products &&
       products.map((item) => {
         return {
-          ...allProducts.find((prod) => prod._id.toString() === (new mongodb.ObjectId(item.productId)).toString()),
-          qty: item.quantity
-        }
-      })
-    callBack(updatedProducts)
-  })
-}
+          ...allProducts.find(
+            (prod) =>
+              prod._id.toString() ===
+              new mongodb.ObjectId(item.productId).toString()
+          ),
+          qty: item.quantity,
+        };
+      });
+    callBack(updatedProducts);
+  });
+};
