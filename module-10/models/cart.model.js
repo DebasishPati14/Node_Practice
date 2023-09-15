@@ -1,19 +1,18 @@
-const fs = require("fs");
-const path = require("path");
-const Product = require("./product.model");
-const { log } = require("console");
+const fs = require('fs');
+const path = require('path');
+const Product = require('./product.model');
 
 const cartPath = path.join(
   path.dirname(process.mainModule.filename),
-  "data",
-  "cart.json"
+  'data',
+  'cart.json'
 );
 
 module.exports = class Cart {
   static saveProductInCart(id, price, callBack) {
     fs.readFile(cartPath, (error, fileContent) => {
       let cartData = {};
-      let productExist = undefined;
+      let productExist;
       if (!error && fileContent.length) {
         cartData = JSON.parse(fileContent);
         productExist =
@@ -21,19 +20,19 @@ module.exports = class Cart {
           cartData.products.find((item) => +item.id === +id);
         if (productExist) {
           cartData.products = cartData.products.map((item) => {
-            if (item.id == id) {
+            if (item.id === id) {
               return { qty: Number(item.qty) + 1, id: item.id };
             } else {
-              return (item = item);
+              return item;
             }
           });
           cartData.totalPrice = Number(cartData.totalPrice) + Number(price);
         } else {
-          cartData.products.push({ id: id, qty: 1 });
+          cartData.products.push({ id, qty: 1 });
           cartData.totalPrice = Number(cartData.totalPrice) + Number(price);
         }
       } else {
-        cartData = { products: [{ id: id, qty: 1 }], totalPrice: +price };
+        cartData = { products: [{ id, qty: 1 }], totalPrice: +price };
       }
       fs.writeFile(cartPath, JSON.stringify(cartData), (err) => {
         console.log(err);
@@ -47,10 +46,10 @@ module.exports = class Cart {
       const cartProducts = [];
       if (!err) {
         Product.fetchAllProducts((products) => {
-          let cartItems = JSON.parse(fileContent).products;
+          const cartItems = JSON.parse(fileContent).products;
           cartItems.forEach((prod) => {
             cartProducts.push({
-              ...products.find((eachItem) => eachItem.id == prod.id),
+              ...products.find((eachItem) => eachItem.id === prod.id),
               qty: prod.qty,
             });
           });
@@ -66,12 +65,12 @@ module.exports = class Cart {
   deleteItemFromCart(productId, price) {
     fs.readFile(cartPath, (err, fileContent) => {
       let cartProducts = [];
-      let updatedProducts = {};
+      const updatedProducts = {};
       if (!err) {
         cartProducts = JSON.parse(fileContent).products;
         updatedProducts.totalPrice =
           JSON.parse(fileContent).totalPrice -
-          +cartProducts.find((prod) => prod.id == productId).qty * +price;
+          +cartProducts.find((prod) => prod.id === productId).qty * +price;
         cartProducts = cartProducts.filter((prod) => prod.id !== productId);
         updatedProducts.products = cartProducts;
       }
