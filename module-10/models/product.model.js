@@ -1,16 +1,15 @@
-const path = require("path");
-const fs = require("fs");
-const { log } = require("console");
+const path = require('path');
+const fs = require('fs');
 
 const productPath = path.join(
   path.dirname(process.mainModule.filename),
-  "data",
-  "products.json"
+  'data',
+  'products.json'
 );
 
 module.exports = class Product {
   constructor(title, description, price, imageUrl, id) {
-    this.id = id ? id : new Date().getTime();
+    this.id = id || new Date().getTime();
     this.title = title;
     this.description = description;
     this.price = price;
@@ -25,7 +24,7 @@ module.exports = class Product {
       }
       if (productId) {
         products = products.map((prod) =>
-          prod.id == productId ? (prod = this) : (prod = prod)
+          prod.id === productId ? (prod = this) : prod
         );
       } else {
         products.push(this);
@@ -50,13 +49,8 @@ module.exports = class Product {
     fs.readFile(productPath, (err, fileContent) => {
       let product = {};
       if (!err) {
-        let products = JSON.parse(fileContent);
-        product = products.find((prod) => {
-          if (prod.id === +productId) {
-            return prod;
-          }
-          console.log(prod.id);
-        });
+        const products = JSON.parse(fileContent);
+        product = products.find((prod) => prod.id === +productId && prod);
       }
       callBack(product);
     });

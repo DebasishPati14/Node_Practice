@@ -1,16 +1,16 @@
 // const products = [];
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 const productFile = path.join(
   path.dirname(process.mainModule.filename),
-  "data",
-  "products.json"
+  'data',
+  'products.json'
 );
 
 const getAppProducts = (callBack) => {
   fs.readFile(productFile, (err, fileContent) => {
     if (!err) {
-      console.log(JSON.parse(fileContent), "lop");
+      console.log(JSON.parse(fileContent), 'lop');
       callBack(JSON.parse(fileContent));
     } else {
       callBack([]);

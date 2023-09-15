@@ -1,19 +1,19 @@
-const Product = require("../model/product.model");
+const Product = require('../model/product.model');
 
 exports.addProduct = (req, res, next) => {
-  res.render("admin/add-product.ejs", {
-    pageTitle: "Add Product",
-    path: "/admin/add-product",
+  res.render('admin/add-product.ejs', {
+    pageTitle: 'Add Product',
+    path: '/admin/add-product',
   });
 };
 
 exports.getEditProduct = (req, res, next) => {
   const productId = req.query.productId;
   Product.fetchAllProduct((cb) => {
-    res.render("admin/edit-product.ejs", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      product: cb.find((prod) => prod.id == productId),
+    res.render('admin/edit-product.ejs', {
+      pageTitle: 'Edit Product',
+      path: '/admin/edit-product',
+      product: cb.find((prod) => prod.id === productId),
     });
   });
 };
@@ -33,20 +33,20 @@ exports.postEditProduct = (req, res, next) => {
     updatedDescription
   );
   updatedProduct.saveProduct();
-  res.redirect("/admin/products");
+  res.redirect('/admin/products');
 };
 
 exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId;
   Product.deleteProduct(productId);
-  res.redirect("/admin/products");
+  res.redirect('/admin/products');
 };
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAllProduct((products) => {
-    res.render("admin/products.ejs", {
-      pageTitle: "Products",
-      path: "/admin/products",
+    res.render('admin/products.ejs', {
+      pageTitle: 'Products',
+      path: '/admin/products',
       prods: products,
     });
   });
@@ -59,12 +59,12 @@ exports.postProduct = (req, res, next) => {
   const description = req.body.description;
   const productObj = new Product(null, title, price, imageUrl, description);
   productObj.saveProduct();
-  res.redirect("shop/message");
+  res.redirect('shop/message');
 };
 
 exports.basePage = (req, res, next) => {
-  res.render("admin/message.ejs", {
-    pageTitle: "Admin",
-    path: "/admin",
+  res.render('admin/message.ejs', {
+    pageTitle: 'Admin',
+    path: '/admin',
   });
 };
