@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, './public/css')));
 
 app.use((req, res, next) => {
-  User.findUserById('64fefd88f52a06768c4e3155', (user) => {
+  User.findUserById('64fe843df52a06768c4e3154', (user) => {
     req.user = user;
     next();
   });

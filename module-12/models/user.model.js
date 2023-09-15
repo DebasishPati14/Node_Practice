@@ -147,17 +147,40 @@ module.exports = class User {
             },
           }
         )
-        .then((result) => {
-          callBack(result);
-        });
-      db.collection('orders')
-        .insertOne({
-          ...cartObject,
-        })
-        .then((result) => {
-          callBack(result);
+        .then(() => {
+          const userDetails = { userId: this._id, userName: this.name };
+          db.collection('orders')
+            .insertOne({
+              ...cartObject,
+              userDetails,
+            })
+            .then((result) => {
+              callBack(result);
+            });
         });
     });
+  }
+
+  getOrders(callBack) {
+    const db = getDB();
+    db.collection('orders')
+      .find()
+      .toArray()
+      .then((allOrderDetails) => {
+        const orderedProducts = [];
+        allOrderDetails.forEach((orderDetail) => {
+          if (
+            new mongodb.ObjectId(orderDetail.userDetails.userId).toString() ===
+            this._id.toString()
+          ) {
+            orderedProducts.push({
+              eachOrderProducts: orderDetail.products,
+              price: orderDetail.totalPrice,
+            });
+          }
+        });
+        callBack(orderedProducts);
+      });
   }
 };
 

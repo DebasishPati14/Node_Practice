@@ -55,7 +55,22 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render('shop/orders.ejs', { pageTitle: 'Orders', path: '/shop/orders' });
+  const userObj = new User(
+    req.user.name,
+    req.user.email,
+    req.user.cartDetails.products,
+    req.user._id
+  );
+
+  userObj.getOrders((callBackValue) => {
+    console.log(callBackValue.length, 'line66');
+    res.render('shop/orders.ejs', {
+      pageTitle: 'Orders',
+      path: '/shop/orders',
+      allOrders: callBackValue,
+    });
+    console.log(callBackValue.length);
+  });
 };
 
 exports.getProductDetails = (req, res, next) => {
@@ -93,6 +108,6 @@ exports.postOrder = (req, res, next) => {
     req.user._id
   );
   userObj.addOrder((callBack) => {
-    res.redirect('/shop/');
+    res.redirect('/shop');
   });
 };

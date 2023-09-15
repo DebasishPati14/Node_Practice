@@ -1,5 +1,6 @@
 .row {
   display: flex;
+  background-color: antiquewhite;
 }
 
 .column {

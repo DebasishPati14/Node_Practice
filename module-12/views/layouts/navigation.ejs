@@ -6,7 +6,8 @@
         <li><a class="<%= path === '/admin/products' ? 'active' : ''%>" href="/admin/products">All product</a></li>
         <li><a class="<%= path === '/shop' ? 'active' : ''%>" href="/shop">Shop</a></li>
         <li><a class="<%= path === '/shop/cart' ? 'active' : ''%>" href="/shop/cart">Cart</a></li>
-        <li><a class="<%= path === '/shop/product' ? 'active' : ''%>" href="/shop/product-details">Product</a></li>
+        <li><a class="<%= path.includes('/shop/product-details') ? 'active' : ''%>" href="/shop/product-details/64ef39fe4c83f74be8a86a73">Product</a></li>
         <li><a class="<%= path === '/shop/checkout' ? 'active' : ''%>" href="/shop/checkout">Checkout</a></li>
+        <li><a class="<%= path === '/shop/orders' ? 'active' : ''%>" href="/shop/orders">Orders</a></li>
     </ul>
 </nav>
