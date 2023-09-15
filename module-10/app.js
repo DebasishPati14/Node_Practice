@@ -8,8 +8,8 @@ const path = require('path');
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, './public/css')));
 
-app.set('view engines', 'views');
-app.set('views', 'views');
+app.set('view engines', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 
 app.use('/shop', shopRoute);
 app.use('/admin', adminRoute);
