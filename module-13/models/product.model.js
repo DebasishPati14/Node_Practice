@@ -1,7 +1,16 @@
-const getDB = require('../utils/database').getDB;
-const mongodb = require('mongodb');
-const notifier = require('node-notifier');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
+const productSchema = new Schema({
+  title: String,
+  description: String,
+  imageUrl: String,
+  price: Number,
+});
+
+module.exports = mongoose.model('Product', productSchema);
+
+/*
 module.exports = class Product {
   constructor(title, description, price, imageUrl, id, userId) {
     this._id = id
@@ -90,3 +99,5 @@ module.exports = class Product {
       });
   }
 };
+
+*/

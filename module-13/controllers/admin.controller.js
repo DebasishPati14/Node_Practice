@@ -12,26 +12,23 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
   const price = req.body.price;
   const imageUrl = req.body.imageUrl;
-  const userId = req.user.userId;
-  const productObj = new Product(
-    title,
-    description,
-    price,
-    imageUrl,
-    null,
-    userId
-  );
-  productObj.saveProduct(null);
-  res.redirect('/admin/products');
+  Product({ title, description, price, imageUrl })
+    .save()
+    .then(() => {
+      res.redirect('/admin/products');
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
   const productId = req.query.productId;
-  Product.getProductById(productId, (callBackValue) => {
+  Product.findById(productId).then((selectedProduct) => {
     res.render('admin/edit-product.ejs', {
       pageTitle: 'EditProduct',
       path: '/admin/edit-product',
-      product: callBackValue,
+      product: selectedProduct,
     });
   });
 };
@@ -42,25 +39,25 @@ exports.postEditProduct = (req, res, next) => {
   const description = req.body.description;
   const price = req.body.price;
   const imageUrl = req.body.imageUrl;
-  const userId = req.user.userId;
-  const productObj = new Product(
-    title,
-    description,
-    price,
-    imageUrl,
-    id,
-    userId
-  );
-  productObj.saveProduct(id);
-  res.redirect('/admin/products');
+  Product.findById(id)
+    .then((product) => {
+      product.title = title;
+      product.description = description;
+      product.price = price;
+      product.imageUrl = imageUrl;
+      return product.save();
+    })
+    .then(() => {
+      res.redirect('/admin/products');
+    });
 };
 
-exports.getProducts = (req, res, next) => {
-  Product.fetchAllProducts((cb) => {
+exports.getAllProducts = (req, res, next) => {
+  Product.find().then((product) => {
     res.render('admin/products.ejs', {
       pageTitle: 'AllProduct',
       path: '/admin/edit-product',
-      products: cb,
+      products: product,
     });
   });
 };
@@ -75,6 +72,7 @@ exports.getAdmin = (req, res, next) => {
 exports.deleteProducts = (req, res, next) => {
   const productId = req.body.productId;
 
-  Product.deleteProduct(productId);
-  res.redirect('/');
+  Product.findByIdAndDelete(productId).then(() => {
+    res.redirect('/');
+  });
 };

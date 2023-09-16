@@ -1,8 +1,20 @@
-const mongodb = require('mongodb');
-const getDB = require('../utils/database').getDB;
-const notifier = require('node-notifier');
-const Product = require('./product.model');
+// const Product = require('./product.model');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
+const userSchema = new Schema({
+  title: String,
+  name: String,
+  email: String,
+  // cartProduct: {
+  //   totalPrice: Number,
+  //   products:Array<{ productId: String, qty: Number }>
+  // }
+});
+
+module.exports = mongoose.model('User', userSchema);
+
+/*
 module.exports = class User {
   constructor(name, email, cartProducts, id) {
     this._id = id;
@@ -202,3 +214,4 @@ const getCartProducts = (products, callBack) => {
     callBack(updatedProducts);
   });
 };
+*/
