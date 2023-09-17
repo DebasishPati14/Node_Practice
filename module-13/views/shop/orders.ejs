@@ -39,14 +39,15 @@
           <%="Total time of Orders : " + allOrders.length %>
           <% allOrders.forEach(eachOrder=> { %>
             <div class="product-cards">
-                <% eachOrder.eachOrderProducts.forEach(orderedProduct=> { %>
+                <% eachOrder.products.forEach(orderedProduct=> { %>
                   <div class="product-card">
                     <p>Name: <%= orderedProduct?.title %></p>
                     <img width="50px" height="50px" alt="<%= orderedProduct.title %>" src='<%= orderedProduct.imageUrl %>'>
                     <p style="color: rgb(6 123 36);">Rs.: <%= orderedProduct?.price %>/- </p>
+                    <p >Quantity: <%= orderedProduct?.quantity %> </p>
                   </div>
                 <% }) %>
-                <p style="color: rgb(248, 47, 255);">Total Price: <%= eachOrder?.price %></p>
+                <p style="color: rgb(248, 47, 255);">Total Price: <%= eachOrder?.totalPrice %></p>
               </div>
               <% }) %>
           <% } else { %>

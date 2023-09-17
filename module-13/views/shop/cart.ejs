@@ -16,7 +16,7 @@
                         <% if( products && products.length> 0) { %>
                         <div class="cart-content">
                             <form action="/shop/add-order" method="POST">
-                            <button type="submit">Place order</button>
+                            <button type="submit">Place Order</button>
                             </form>
                         </div>
                         <% } %>
@@ -79,19 +79,19 @@
                                     </div>
                                     <div class="column">
                                         <h2>
-                                            <%= product.qty %>
+                                            <%= product.quantity %>
                                         </h2>
                                     </div>
 
                                     <div class="column">
                                         <h2>
-                                            <%= +product.price * +product.qty %>
+                                            <%= +product.price * +product.quantity %>
                                         </h2>
                                     </div>
                                     <div class="column">
                                         <form action="/shop/delete-cart-item" method="POST">
                                             <h2>
-                                                <input type="submit" value="DeleteItem">
+                                                <button type="submit">DeleteItem</button>
                                                 <input type="hidden" name="productId" value="<%= product._id %>">
                                                 <input type="hidden" name="productPrice" value="<%= product.price %>">
                                             </h2>
