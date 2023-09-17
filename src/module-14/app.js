@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const adminRoute = require('./routes/admin.route');
 const shopRoute = require('./routes/shop.route');
+const authRoute = require('./routes/auth.route');
 const path = require('path');
 const User = require('./models/user.model');
 const mongoose = require('mongoose');
@@ -22,13 +23,22 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use('/shop', shopRoute);
 app.use('/admin', adminRoute);
+app.use('/auth', authRoute);
 
 app.get('/', (req, res, next) => {
-  res.render('home.ejs', { path: '/', pageTitle: 'Main Page' });
+  res.render('home.ejs', {
+    path: '/',
+    pageTitle: 'Main Page',
+    isAuthenticated: req.isAuthenticated,
+  });
 });
 
 app.get('***', (req, res, next) => {
-  res.render('404.ejs', { path: '404', pageTitle: '404 Page' });
+  res.render('404.ejs', {
+    path: '404',
+    pageTitle: '404 Page',
+    isAuthenticated: req.isAuthenticated,
+  });
 });
 
 mongoose
