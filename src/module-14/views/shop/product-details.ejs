@@ -19,11 +19,14 @@
                         <p class="price">
                             RS. <%= product.price %>/-
                         </p>
+                        <% if (isAuthenticated) {%>
+
                         <form action="/shop/cart" method="post">
                             <input type="hidden" name="productId" value="<%= product._id %>">
                             <input type="hidden" name="price" value="<%= product.price %>">
                             <button type="submit">Add to Cart</button>
                         </form>
+                        <%}%>
                     </div>
                 </div>
                 <% } %>
