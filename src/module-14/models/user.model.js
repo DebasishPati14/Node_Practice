@@ -46,13 +46,13 @@ userSchema.methods.addToCart = function (productId, price) {
 };
 
 userSchema.methods.deleteProductFromCart = function (productId, price) {
-  this.cartProduct.totalPrice -=
+  this.cartDetail.totalPrice -=
     +price *
-    this.cartProduct.products.find(
+    this.cartDetail.products.find(
       (product) => (product) =>
         product.productId.toString() === productId.toString()
     ).quantity;
-  this.cartProduct.products = this.cartProduct.products.filter(
+  this.cartDetail.products = this.cartDetail.products.filter(
     (product) => product.productId.toString() !== productId.toString()
   );
 
