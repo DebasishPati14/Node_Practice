@@ -31,7 +31,7 @@ exports.getEditProduct = (req, res, next) => {
       pageTitle: 'EditProduct',
       path: '/admin/edit-product',
       product: selectedProduct,
-      isAuthenticated: req.get('Cookie').split('=')[1] === 'true',
+      isAuthenticated: req.session.isAuthenticated,
     });
   });
 };
@@ -63,7 +63,7 @@ exports.getAllProducts = (req, res, next) => {
       pageTitle: 'AllProduct',
       path: '/admin/edit-product',
       products: product,
-      isAuthenticated: req.get('Cookie').split('=')[1] === 'true',
+      isAuthenticated: req.session.isAuthenticated,
     });
   });
 };
@@ -72,7 +72,7 @@ exports.getAdmin = (req, res, next) => {
   res.render('admin/admin.ejs', {
     pageTitle: 'Admin',
     path: '/admin',
-    isAuthenticated: req.get('Cookie').split('=')[1] === 'true',
+    isAuthenticated: req.session.isAuthenticated,
   });
 };
 
