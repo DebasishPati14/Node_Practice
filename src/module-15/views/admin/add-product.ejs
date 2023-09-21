@@ -17,7 +17,7 @@
 
                 <label for="title">Description</label>
                 <textarea type='text' name='description' style="border-radius: 5px;" id="description" rows="5"></textarea><br>
-                
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
                 <button type='submit'>Add Product</button>
             </form>
 

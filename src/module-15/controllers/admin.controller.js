@@ -3,7 +3,6 @@ const Product = require('../models/product.model');
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/add-product.ejs', {
     pageTitle: 'AddProduct',
-    isAuthenticated: req.session.isAuthenticated,
     path: '/admin/add-product',
   });
 };
@@ -32,7 +31,6 @@ exports.getEditProduct = (req, res, next) => {
       pageTitle: 'EditProduct',
       path: '/admin/edit-product',
       product: selectedProduct,
-      isAuthenticated: req.session.isAuthenticated,
     });
   });
 };
@@ -64,7 +62,6 @@ exports.getAllProducts = (req, res, next) => {
       pageTitle: 'AllProduct',
       path: '/admin/edit-product',
       products: product,
-      isAuthenticated: req.session.isAuthenticated,
     });
   });
 };
@@ -73,7 +70,6 @@ exports.getAdmin = (req, res, next) => {
   res.render('admin/admin.ejs', {
     pageTitle: 'Admin',
     path: '/admin',
-    isAuthenticated: req.session.isAuthenticated,
   });
 };
 

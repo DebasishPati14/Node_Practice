@@ -16,6 +16,7 @@
                         <% if( products && products.length> 0) { %>
                         <div class="cart-content">
                             <form action="/shop/add-order" method="POST">
+                                <input type="hidden" name="_csrf" value="<%= csrf %>">
                             <button type="submit">Place Order</button>
                             </form>
                         </div>
@@ -91,6 +92,7 @@
                                     <div class="column">
                                         <form action="/shop/delete-cart-item" method="POST">
                                             <h2>
+                                                <input type="hidden" name="_csrf" value="<%= csrf %>">
                                                 <button type="submit">DeleteItem</button>
                                                 <input type="hidden" name="productId" value="<%= product._id %>">
                                                 <input type="hidden" name="productPrice" value="<%= product.price %>">

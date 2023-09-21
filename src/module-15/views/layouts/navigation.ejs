@@ -11,7 +11,7 @@
     <li>
       <a
         class="<%= path.includes('/shop/product-details') ? 'active' : ''%>"
-        href="/shop/product-details/64ef39fe4c83f74be8a86a73"
+        href="/shop/product-details/6504a6459bf3b4ed69502e84"
         >Product</a
       >
     </li>
@@ -60,18 +60,21 @@
       <a
         class="<%= path === '/shop/orders' ? 'active' : ''%>"
         href="/shop/orders"
-        >Orders</a
-      >
+        >Orders
+        </a>
     </li>
 
     <% }%>
-    <li style="float: right">
-      <% if (!isAuthenticated) {%>
-      <a class="<%= path === '/auth/login' ? 'active' : ''%>" href="/auth/login">Login</a
-      >
+    <% if (!isAuthenticated) {%>
+      <li style="float: right">
+      <a class="<%= path === '/auth/login' ? 'active' : ''%>" href="/auth/login">Login</a>
+      </li>
+      <li style="float: right">
+      <a class="<%= path === '/auth/signup' ? 'active' : ''%>" href="/auth/signup">Signup</a>
+      </li>
       <% } else { %>
-
       <form action="/auth/logout" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
         <button
           type="submit"
           style="background: none; border: none; cursor: pointer"
