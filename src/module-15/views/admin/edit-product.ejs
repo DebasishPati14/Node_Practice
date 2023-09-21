@@ -19,7 +19,7 @@
                 <textarea type='text' name='description' id="description"
                     rows="5"> <%= product.description %> </textarea><br>
                 
-
+                    <input type="hidden" name="_csrf" value="<%= csrf %>">
                 <input type='hidden' name='productId' id="prodictId" value="<%= product._id %>" />
 
                 <button type='submit'>Edit Product</button>

@@ -10,6 +10,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const mongoSessionConnect = require('connect-mongodb-session');
 const MongoDBSessionStore = mongoSessionConnect(session);
+const csrf = require('csurf');
+const flashMessage = require('connect-flash');
 
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, './public/css')));
@@ -22,6 +24,7 @@ const mongoStore = MongoDBSessionStore({
   collection: 'sessions',
 });
 
+const csrfProtection = csrf();
 app.use(
   session({
     secret: 'user authentication',
@@ -30,6 +33,8 @@ app.use(
     store: mongoStore,
   })
 );
+app.use(csrfProtection);
+app.use(flashMessage());
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -39,6 +44,11 @@ app.use((req, res, next) => {
     req.user = user;
     next();
   });
+});
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isAuthenticated;
+  res.locals.csrf = req.csrfToken();
+  next();
 });
 
 app.set('view engines', path.join(__dirname, 'views'));
@@ -52,7 +62,6 @@ app.get('/', (req, res, next) => {
   res.render('home.ejs', {
     path: '/',
     pageTitle: 'Main Page',
-    isAuthenticated: req.isAuthenticated,
   });
 });
 
@@ -60,7 +69,6 @@ app.get('***', (req, res, next) => {
   res.render('404.ejs', {
     path: '404',
     pageTitle: '404 Page',
-    isAuthenticated: req.isAuthenticated,
   });
 });
 
