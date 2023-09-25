@@ -1,6 +1,8 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const emailTemplate = require('../utils/email-templates');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -12,22 +14,6 @@ const transporter = nodemailer.createTransport({
     pass: 'liqbhnlpyfswrgkc',
   },
 });
-
-const getSignUpMessage = (mailId, userName) => {
-  return {
-    from: 'mr.debasish005@gmail.com',
-    to: mailId,
-    subject: 'Account Creation Successful! ✌',
-    html: `
-        <h1>Welcome ${userName}</h1>
-        <div style=" background-color: #acacac;  border-radius: 10px;  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  padding: 20px;
-        margin: 20px auto;  max-width: 400px;">
-          <h3 style="color: #0073e6;">Your Account is Created Successfully 🌹</h3>
-          <p style="color: #333;">Your account with ${mailId} has been successfully created. Welcome to our shopping application!</p>
-        </div>
-    `,
-  };
-};
 
 exports.getLogin = (req, res, next) => {
   const errorMessage = req.flash('error')[0];
@@ -80,7 +66,6 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-  // res.setHeader('Set-Cookie', 'isAuthenticated=true;path=/');
   const userName = req.body.name;
   const userEmail = req.body.email;
   const userPassword = req.body.password;
@@ -116,7 +101,9 @@ exports.postSignup = (req, res, next) => {
               'Account created Successfully!. Now you need to login.'
             );
             res.redirect('/auth/login');
-            return transporter.sendMail(getSignUpMessage(userEmail, userName));
+            return transporter.sendMail(
+              emailTemplate.getSignUpMessage(userEmail, userName)
+            );
           })
           .then(() => {
             console.log('mail send successfully');
@@ -139,5 +126,131 @@ exports.postLogout = (req, res, next) => {
   req.session.destroy((error) => {
     console.log(error);
     res.redirect('/');
+  });
+};
+
+exports.getReset = (req, res, next) => {
+  const errorFlash = req.flash('error');
+
+  res.render('auth/reset.ejs', {
+    pageTitle: 'Reset Password',
+    path: '/auth/reset',
+    errorMessage: errorFlash[0],
+  });
+};
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buff) => {
+    if (err) {
+      return res.redirect(`auth/reset`);
+    }
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          req.flash('error', 'No User exist with this email id!');
+          return res.redirect(`/auth/reset`);
+        }
+        user.resetToken = buff.toString('hex');
+        user.resetTokenExpires = Date.now() + 900000;
+        user
+          .save()
+          .then(() => {
+            transporter
+              .sendMail(
+                emailTemplate.resetPasswordMessage(
+                  req.body.email,
+                  buff.toString('hex')
+                )
+              )
+              .then(() => {
+                req.flash('success', 'Reset Password link sent Successfully!');
+                res.redirect('/');
+              })
+              .catch((error) => {
+                console.log('mail error', error);
+              });
+          })
+          .catch((error) => {
+            console.log('user not save', error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+};
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.resetToken;
+
+  User.findOne({
+    resetToken: token,
+    resetTokenExpires: { $gt: Date.now() },
+  })
+    .then((user) => {
+      if (!user) {
+        req.flash('error', 'Session has expired or Invalid Token provided!');
+        return res.redirect(`/auth/reset`);
+      }
+      const errorFlash = req.flash('error');
+      console.log(user.resetTokenExpires);
+      res.render('auth/new-password.ejs', {
+        pageTitle: 'Reset Password',
+        errorMessage: errorFlash[0],
+        userId: user._id,
+        resetToken: token,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+exports.postNewPassword = (req, res, next) => {
+  const token = req.body.resetToken;
+  const userId = req.body.userId;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirm_password;
+  if (confirmPassword !== password) {
+    req.flash('error', 'Passwords do not match!');
+    return res.redirect(`/auth/new-password/${token}`);
+  }
+  User.findOne({
+    _id: userId,
+    resetToken: token,
+    resetTokenExpires: { $gt: Date.now() },
+  }).then((user) => {
+    if (!user) {
+      req.flash('error', 'Session has expired!');
+      return res.redirect(`/auth/reset`);
+    }
+    bcrypt
+      .hash(password, 12)
+      .then((encodedPassword) => {
+        user.password = encodedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpires = undefined;
+        return user.save();
+      })
+      .then(() => {
+        req.flash(
+          'success',
+          'Password changed Successfully!Log in with new password'
+        );
+        res.redirect('/auth/login');
+        return transporter.sendMail(
+          emailTemplate.getChangePasswordMessage(user.email)
+        );
+      })
+      .then(() => {})
+      .catch((error) => {
+        console.log('mail send error', error);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   });
 };

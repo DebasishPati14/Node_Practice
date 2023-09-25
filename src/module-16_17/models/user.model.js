@@ -5,6 +5,8 @@ const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  resetToken: { type: String },
+  resetTokenExpires: { type: Date },
   cartDetail: {
     totalPrice: { type: Number, required: true },
     products: [
