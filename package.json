@@ -4,7 +4,7 @@
   "description": "\"Watching Videos and Practicing\"",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./src/module-16_17/app.js",
+    "start": "nodemon ./src/module-18/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
