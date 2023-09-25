@@ -59,9 +59,12 @@ app.use('/admin', adminRoute);
 app.use('/auth', authRoute);
 
 app.get('/', (req, res, next) => {
+  const successFlash = req.flash('success');
+
   res.render('home.ejs', {
     path: '/',
     pageTitle: 'Main Page',
+    successMessage: successFlash[0],
   });
 });
 
