@@ -1,0 +1,36 @@
+<%- include('../layouts/head.ejs') %>
+<link rel="stylesheet" href="/admin.css">
+    </head>
+
+    <body>
+        <% if (errorMessage && errorMessage.length > 0) {%>
+            <% errorMessage.forEach(error =>{%>
+                <div class="user-message user-message--error">
+                    <p><%=  error %></p>
+                </div>
+            <% })  %>
+        <% } %>
+        <% if (successMessage) {%>
+            <div class="user-message">
+                <p><%=  successMessage %></p>
+            </div>
+        <%}%>
+        <h3>Get Into App</h3><br />
+            <form action='/auth/login' class="main-form" method='POST'><br>
+
+                <label for="email">Email</label>
+                <input type='email' name='email' id="email" value="<%= oldValues ? oldValues.email || '' : ''%>"  /><br>
+
+                <label for="password">Password</label>
+                <input type='password' name='password' id="password" value="<%= oldValues ? oldValues.password || '' : '' %>" /><br>
+                
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
+                <button style="color: white; background-color: green;" type='submit'>Login</button>
+                <button style="color: white; background-color: green;">
+                    <a style="text-decoration: none;color: white;" href="/auth/signup">Goto Signup</a>
+                </button>
+
+                <a  href="/auth/reset">Forgot Password?</a>
+                
+            </form>
+            <%- include('../layouts/tail') %>

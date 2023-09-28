@@ -4,7 +4,7 @@
   "description": "\"Watching Videos and Practicing\"",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./src/module-16_17/app.js",
+    "start": "nodemon ./src/module-18/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
@@ -23,6 +23,7 @@
     "express": "^4.18.1",
     "express-handlebars": "^7.0.7",
     "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
     "mongodb": "^6.0.0",
     "mongoose": "^7.5.1",
     "node-notifier": "^10.0.1",
