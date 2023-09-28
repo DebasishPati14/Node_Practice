@@ -12,7 +12,7 @@
             <form action='/auth/reset' class="main-form" method='POST'><br>
 
                 <label for="email">Email</label>
-                <input type='email' name='email' id="email" /><br>
+                <input type='email' name='email' id="email" value="<%= oldValues && oldValues.email %>" /><br>
 
                 <input type="hidden" name="_csrf" value="<%= csrf %>">
                 <button style="color: white; background-color: green;" type='submit'>Send Email.</button>

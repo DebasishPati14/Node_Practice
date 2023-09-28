@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const emailTemplate = require('../utils/email-templates');
+const { validationResult } = require('express-validator');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -16,7 +17,7 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.getLogin = (req, res, next) => {
-  const errorMessage = req.flash('error')[0];
+  const errorMessage = req.flash('error');
   const successFlash = req.flash('success');
 
   res.render('auth/login.ejs', {
@@ -24,15 +25,27 @@ exports.getLogin = (req, res, next) => {
     path: '/auth/login',
     errorMessage,
     successMessage: successFlash[0],
+    oldValues: {},
   });
 };
 
 exports.postLogin = (req, res, next) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
-  if (!userEmail || !userPassword) {
-    req.flash('error', 'All fields are required');
-    return res.redirect('/auth/login');
+  // if (!userEmail || !userPassword) {
+  //   req.flash('error', 'All fields are required');
+  //   return res.redirect('/auth/login');
+  // }
+  console.log(validationResult(req));
+  if (!validationResult(req).isEmpty()) {
+    const errorMessage = validationResult(req).errors.map((err) => err.msg);
+    return res.render('auth/login.ejs', {
+      pageTitle: 'Login',
+      path: '/auth/login',
+      errorMessage,
+      successMessage: null,
+      oldValues: req.body,
+    });
   }
   User.findOne({ email: userEmail }).then((existingUser) => {
     if (!existingUser) {
@@ -62,6 +75,7 @@ exports.getSignup = (req, res, next) => {
     pageTitle: 'Signup',
     path: '/auth/signup',
     errorMessage: errorFlash[0],
+    oldValues: {},
   });
 };
 
@@ -70,6 +84,17 @@ exports.postSignup = (req, res, next) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
   const userConfirmPassword = req.body.confirmPassword;
+  if (!validationResult(req).isEmpty()) {
+    console.log(req.body);
+
+    const errorMessage = validationResult(req).errors.map((err) => err.msg);
+    return res.render('auth/signup.ejs', {
+      pageTitle: 'Signup',
+      path: '/auth/signup',
+      errorMessage,
+      oldValues: { ...req.body },
+    });
+  }
   if (!userName || !userEmail || !userPassword || !userConfirmPassword) {
     req.flash('error', 'All fields are required');
     return res.redirect('/auth/signup');
@@ -136,6 +161,7 @@ exports.getReset = (req, res, next) => {
     pageTitle: 'Reset Password',
     path: '/auth/reset',
     errorMessage: errorFlash[0],
+    oldValues: {},
   });
 };
 
@@ -183,6 +209,17 @@ exports.postReset = (req, res, next) => {
 exports.getNewPassword = (req, res, next) => {
   const token = req.params.resetToken;
 
+  console.log(validationResult(req).errors);
+  if (!validationResult(req).isEmpty()) {
+    return res.render('auth/new-password.ejs', {
+      pageTitle: 'Reset Password',
+      errorMessage: validationResult(req).errors[0].msg,
+      userId: req.body.userId,
+      resetToken: token,
+      oldValues: { ...req.body },
+    });
+  }
+
   User.findOne({
     resetToken: token,
     resetTokenExpires: { $gt: Date.now() },
@@ -199,6 +236,7 @@ exports.getNewPassword = (req, res, next) => {
         errorMessage: errorFlash[0],
         userId: user._id,
         resetToken: token,
+        oldValues: {},
       });
     })
     .catch((error) => {
@@ -212,9 +250,18 @@ exports.postNewPassword = (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirm_password;
   if (confirmPassword !== password) {
-    req.flash('error', 'Passwords do not match!');
     return res.redirect(`/auth/new-password/${token}`);
   }
+  // if (!validationResult(req).isEmpty()) {
+  //   console.log(validationResult(req).errors);
+  //   return res.render('auth/new-password.ejs', {
+  //     pageTitle: 'Reset Password',
+  //     errorMessage: validationResult(req).errors[0].msg,
+  //     userId,
+  //     resetToken: token,
+  //     oldValues: {},
+  //   });
+  // }
   User.findOne({
     _id: userId,
     resetToken: token,
