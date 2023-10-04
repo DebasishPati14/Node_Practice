@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const adminRoute = require('./routes/admin.route');
 const shopRoute = require('./routes/shop.route');
 const authRoute = require('./routes/auth.route');
+const errorRoute = require('./routes/error.route');
 const path = require('path');
 const User = require('./models/user.model');
 const mongoose = require('mongoose');
@@ -12,6 +13,7 @@ const mongoSessionConnect = require('connect-mongodb-session');
 const MongoDBSessionStore = mongoSessionConnect(session);
 const csrf = require('csurf');
 const flashMessage = require('connect-flash');
+const errorController = require('./controllers/error.controller');
 
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, './public/css')));
@@ -57,6 +59,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/shop', shopRoute);
 app.use('/admin', adminRoute);
 app.use('/auth', authRoute);
+app.use('/', errorRoute);
 
 app.get('/', (req, res, next) => {
   const successFlash = req.flash('success');
@@ -68,11 +71,11 @@ app.get('/', (req, res, next) => {
   });
 });
 
-app.get('***', (req, res, next) => {
-  res.render('404.ejs', {
-    path: '404',
-    pageTitle: '404 Page',
-  });
+app.get(errorController.get404);
+
+app.use((err, req, res, next) => {
+  console.table(err);
+  res.redirect('/500');
 });
 
 mongoose
