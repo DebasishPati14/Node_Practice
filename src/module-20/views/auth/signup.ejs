@@ -1,0 +1,34 @@
+<%- include('../layouts/head.ejs') %>
+<link rel="stylesheet" href="/admin.css">
+    </head>
+
+    <body>
+        <% if (errorMessage && errorMessage.length > 0) {%>
+            <% errorMessage.forEach(error =>{%>
+                <div class="user-message user-message--error">
+                    <p><%=  error %></p>
+                </div>
+            <% })  %>
+        <% } %>
+       
+        <h3>Welcome to Our App</h3><br />
+            <form action='/auth/signup' class="main-form" method='POST'><br>
+                <label for="name">Name</label>
+                <input type='text' name='name' id="name" value="<%= oldValues && oldValues.name %>" />
+
+                <label for="email">Email</label>
+                <input type='email' name='email' id="email" value="<%= oldValues && oldValues.email %>"/><br>
+
+                <label for="password">Password</label>
+                <input type='password' name='password' id="password"  value="<%= oldValues && oldValues.password %>"/><br>
+
+                <label for="confirmPassword">Confirm Password</label>
+                <input type='password' name='confirmPassword' id="confirmPassword"  value="<%= oldValues && oldValues.confirmPassword %>" /><br>
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+                <button style="color: white; background-color: green;" type='submit'>Signup</button>
+                <button style="color: white; background-color: green;">
+                    <a style="text-decoration: none;color: white;" href="/auth/login">Goto Login</a>
+                </button>
+            </form>
+            <%- include('../layouts/tail') %>
