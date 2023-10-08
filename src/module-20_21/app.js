@@ -58,7 +58,7 @@ app.use(
 );
 
 const MONGO_DB_URI =
-  'mongodb+srv://Usemy_Node_Practice:ezcYWnvYv4Pdrebn@cluster0.yvpr5b1.mongodb.net/module-20';
+  'mongodb+srv://Usemy_Node_Practice:ezcYWnvYv4Pdrebn@cluster0.yvpr5b1.mongodb.net/module-15';
 
 const mongoStore = MongoDBSessionStore({
   uri: MONGO_DB_URI,

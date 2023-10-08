@@ -6,8 +6,13 @@ const path = require('path');
 const PdfDocument = require('pdfkit');
 const utilMethod = require('../utils/util-methods');
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getAllProducts = (req, res, next) => {
+  const pageNumber = req.query.page;
   Product.find()
+    .skip(page - 1 * ITEMS_PER_PAGE)
+    .limit(ITEMS_PER_PAGE)
     .then((products) => {
       res.render('shop/all-products.ejs', {
         pageTitle: 'All Products',
@@ -16,6 +21,7 @@ exports.getAllProducts = (req, res, next) => {
       });
     })
     .catch((error) => {
+      console.log(error);
       const err = new Error(error);
       err.httpStatusCode = 500;
       return next(err);
