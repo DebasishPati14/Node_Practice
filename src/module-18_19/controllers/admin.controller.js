@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Product = require('../models/product.model');
 const { validationResult } = require('express-validator');
 
@@ -29,25 +30,40 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
 
-  Product({ title, description, price, imageUrl, userId: userDetails._id })
+  Product({
+    title,
+    description,
+    price,
+    imageUrl,
+    userId: userDetails._id,
+    _id: new mongoose.Types.ObjectId('65052919940a383d321473ef'),
+  })
     .save()
     .then(() => {
       res.redirect('/admin/products');
     })
     .catch((error) => {
-      console.log(error);
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
     });
 };
 
 exports.getEditProduct = (req, res, next) => {
   const productId = req.query.productId;
-  Product.findById(productId).then((selectedProduct) => {
-    res.render('admin/edit-product.ejs', {
-      pageTitle: 'EditProduct',
-      path: '/admin/edit-product',
-      product: selectedProduct,
+  Product.findById(productId)
+    .then((selectedProduct) => {
+      res.render('admin/edit-product.ejs', {
+        pageTitle: 'EditProduct',
+        path: '/admin/edit-product',
+        product: selectedProduct,
+      });
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
     });
-  });
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -68,17 +84,28 @@ exports.postEditProduct = (req, res, next) => {
     })
     .then(() => {
       res.redirect('/admin/products');
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
     });
 };
 
 exports.getAllProducts = (req, res, next) => {
-  Product.find().then((product) => {
-    res.render('admin/products.ejs', {
-      pageTitle: 'AllProduct',
-      path: '/admin/edit-product',
-      products: product,
+  Product.find()
+    .then((product) => {
+      res.render('admin/products.ejs', {
+        pageTitle: 'AllProduct',
+        path: '/admin/edit-product',
+        products: product,
+      });
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
     });
-  });
 };
 
 exports.getAdmin = (req, res, next) => {
@@ -91,7 +118,13 @@ exports.getAdmin = (req, res, next) => {
 exports.deleteProducts = (req, res, next) => {
   const productId = req.body.productId;
 
-  Product.findByIdAndDelete(productId).then(() => {
-    res.redirect('/');
-  });
+  Product.findByIdAndDelete(productId)
+    .then(() => {
+      res.redirect('/');
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };

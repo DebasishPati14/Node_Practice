@@ -22,6 +22,7 @@ module.exports = {
   },
   rules: {
     'prettier/prettier': ['error', { semi: true }],
+    'n/handle-callback-err': ['none'],
     // 'comma-dangle': ['error', 'always-multiline'],
   },
 };

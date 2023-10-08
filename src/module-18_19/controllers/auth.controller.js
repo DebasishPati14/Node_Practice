@@ -32,10 +32,7 @@ exports.getLogin = (req, res, next) => {
 exports.postLogin = (req, res, next) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
-  // if (!userEmail || !userPassword) {
-  //   req.flash('error', 'All fields are required');
-  //   return res.redirect('/auth/login');
-  // }
+
   console.log(validationResult(req));
   if (!validationResult(req).isEmpty()) {
     const errorMessage = validationResult(req).errors.map((err) => err.msg);
@@ -47,26 +44,32 @@ exports.postLogin = (req, res, next) => {
       oldValues: req.body,
     });
   }
-  User.findOne({ email: userEmail }).then((existingUser) => {
-    if (!existingUser) {
-      req.flash('error', 'Invalid email or password');
-      return res.redirect('/auth/login');
-    }
-    bcrypt.compare(userPassword, existingUser.password).then((doMatch) => {
-      if (doMatch) {
-        req.session.isAuthenticated = true;
-        req.session.user = existingUser;
-        req.session.save((err) => {
-          if (!err) {
-            res.redirect('/shop');
-          }
-        });
-      } else {
+  User.findOne({ email: userEmail })
+    .then((existingUser) => {
+      if (!existingUser) {
         req.flash('error', 'Invalid email or password');
-        res.redirect('/auth/login');
+        return res.redirect('/auth/login');
       }
+      bcrypt.compare(userPassword, existingUser.password).then((doMatch) => {
+        if (doMatch) {
+          req.session.isAuthenticated = true;
+          req.session.user = existingUser;
+          req.session.save((err) => {
+            if (!err) {
+              res.redirect('/shop');
+            }
+          });
+        } else {
+          req.flash('error', 'Invalid email or password');
+          res.redirect('/auth/login');
+        }
+      });
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
     });
-  });
 };
 
 exports.getSignup = (req, res, next) => {
@@ -137,7 +140,9 @@ exports.postSignup = (req, res, next) => {
             console.log('mail send', error);
           })
           .catch((error) => {
-            console.log(error);
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
           })
           .catch((err) => {
             console.log('BCrypt Error', err);
@@ -201,7 +206,9 @@ exports.postReset = (req, res, next) => {
           });
       })
       .catch((error) => {
-        console.log(error);
+        const err = new Error(error);
+        err.httpStatusCode = 500;
+        return next(err);
       });
   });
 };
@@ -209,7 +216,6 @@ exports.postReset = (req, res, next) => {
 exports.getNewPassword = (req, res, next) => {
   const token = req.params.resetToken;
 
-  console.log(validationResult(req).errors);
   if (!validationResult(req).isEmpty()) {
     return res.render('auth/new-password.ejs', {
       pageTitle: 'Reset Password',
@@ -240,7 +246,9 @@ exports.getNewPassword = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
     });
 };
 
@@ -252,52 +260,49 @@ exports.postNewPassword = (req, res, next) => {
   if (confirmPassword !== password) {
     return res.redirect(`/auth/new-password/${token}`);
   }
-  // if (!validationResult(req).isEmpty()) {
-  //   console.log(validationResult(req).errors);
-  //   return res.render('auth/new-password.ejs', {
-  //     pageTitle: 'Reset Password',
-  //     errorMessage: validationResult(req).errors[0].msg,
-  //     userId,
-  //     resetToken: token,
-  //     oldValues: {},
-  //   });
-  // }
+
   User.findOne({
     _id: userId,
     resetToken: token,
     resetTokenExpires: { $gt: Date.now() },
-  }).then((user) => {
-    if (!user) {
-      req.flash('error', 'Session has expired!');
-      return res.redirect(`/auth/reset`);
-    }
-    bcrypt
-      .hash(password, 12)
-      .then((encodedPassword) => {
-        user.password = encodedPassword;
-        user.resetToken = undefined;
-        user.resetTokenExpires = undefined;
-        return user.save();
-      })
-      .then(() => {
-        req.flash(
-          'success',
-          'Password changed Successfully!Log in with new password'
-        );
-        res.redirect('/auth/login');
-        return transporter.sendMail(
-          emailTemplate.getChangePasswordMessage(user.email)
-        );
-      })
-      .then(() => {})
-      .catch((error) => {
-        console.log('mail send error', error);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  });
+  })
+    .then((user) => {
+      if (!user) {
+        req.flash('error', 'Session has expired!');
+        return res.redirect(`/auth/reset`);
+      }
+      bcrypt
+        .hash(password, 12)
+        .then((encodedPassword) => {
+          user.password = encodedPassword;
+          user.resetToken = undefined;
+          user.resetTokenExpires = undefined;
+          return user.save();
+        })
+        .then(() => {
+          req.flash(
+            'success',
+            'Password changed Successfully!Log in with new password'
+          );
+          res.redirect('/auth/login');
+          return transporter.sendMail(
+            emailTemplate.getChangePasswordMessage(user.email)
+          );
+        })
+        .then(() => {})
+        .catch((error) => {
+          console.log('mail send error', error);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };

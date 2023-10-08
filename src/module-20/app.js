@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const adminRoute = require('./routes/admin.route');
 const shopRoute = require('./routes/shop.route');
 const authRoute = require('./routes/auth.route');
+const errorRoute = require('./routes/error.route');
 const path = require('path');
 const User = require('./models/user.model');
 const mongoose = require('mongoose');
@@ -12,12 +13,52 @@ const mongoSessionConnect = require('connect-mongodb-session');
 const MongoDBSessionStore = mongoSessionConnect(session);
 const csrf = require('csurf');
 const flashMessage = require('connect-flash');
+const errorController = require('./controllers/error.controller');
+const multer = require('multer');
+
+const fileStorageInformation = multer.diskStorage({
+  destination: (err, file, cb) => {
+    cb(null, 'src/module-20/images');
+  },
+  filename: (err, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
 
 app.use(bodyParser.urlencoded());
+app.use(
+  multer({
+    storage: fileStorageInformation,
+    fileFilter: (err, file, cb) => {
+      if (
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/webp' ||
+        file.mimetype === 'image/jpeg'
+      ) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    },
+  }).single('image')
+);
 app.use(express.static(path.join(__dirname, './public/css')));
+app.use(
+  '/src/module-20/images',
+  express.static(path.join(__dirname, './images'))
+);
+app.use(
+  '/admin/src/module-20/images',
+  express.static(path.join(__dirname, './images'))
+);
+app.use(
+  '/shop/src/module-20/images',
+  express.static(path.join(__dirname, './images'))
+);
 
 const MONGO_DB_URI =
-  'mongodb+srv://Usemy_Node_Practice:ezcYWnvYv4Pdrebn@cluster0.yvpr5b1.mongodb.net/module-15';
+  'mongodb+srv://Usemy_Node_Practice:ezcYWnvYv4Pdrebn@cluster0.yvpr5b1.mongodb.net/module-20';
 
 const mongoStore = MongoDBSessionStore({
   uri: MONGO_DB_URI,
@@ -57,6 +98,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/shop', shopRoute);
 app.use('/admin', adminRoute);
 app.use('/auth', authRoute);
+app.use('/', errorRoute);
 
 app.get('/', (req, res, next) => {
   const successFlash = req.flash('success');
@@ -68,11 +110,11 @@ app.get('/', (req, res, next) => {
   });
 });
 
-app.get('***', (req, res, next) => {
-  res.render('404.ejs', {
-    path: '404',
-    pageTitle: '404 Page',
-  });
+app.get(errorController.get404);
+
+app.use((err, req, res, next) => {
+  console.table(err);
+  res.redirect('/500');
 });
 
 mongoose

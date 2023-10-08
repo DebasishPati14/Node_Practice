@@ -1,0 +1,23 @@
+<%- include('../layouts/head.ejs') %>
+<link rel="stylesheet" href="/admin.css">
+    </head>
+
+    <body>
+        <% if (errorMessage) {%>
+        <div class="user-message user-message--error">
+            <p><%=  errorMessage %></p>
+        </div>
+        <%}%>
+        <h3>Reset Your Password</h3><br />
+            <form action='/auth/reset' class="main-form" method='POST'><br>
+
+                <label for="email">Email</label>
+                <input type='email' name='email' id="email" value="<%= oldValues && oldValues.email %>" /><br>
+
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
+                <button style="color: white; background-color: green;" type='submit'>Send Email.</button>
+                  
+                <a  href="/auth/login">Goto Login</a>
+
+            </form>
+            <%- include('../layouts/tail') %>
