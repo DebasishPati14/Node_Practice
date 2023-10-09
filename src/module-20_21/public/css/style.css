@@ -1,3 +1,9 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative; width: 100%;}
+
 .index-button-container {
   display: flex;
   justify-content: center;
@@ -81,4 +87,15 @@ nav .active {
 .pagination a:active {
   background: #773df5;
   color: white;
+}
+
+.footer {
+  background-color: #773df5;
+  color: #fff;
+  text-align: center;
+  margin: 10px 0;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 98%;
 }

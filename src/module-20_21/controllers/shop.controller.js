@@ -6,19 +6,33 @@ const path = require('path');
 const PdfDocument = require('pdfkit');
 const utilMethod = require('../utils/util-methods');
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 3;
 
-exports.getAllProducts = (req, res, next) => {
-  const pageNumber = req.query.page;
+exports.getAllProducts = async (req, res, next) => {
+  const pageNumber = +req.query.page || 1;
+  let totalDocuments = 0;
   Product.find()
-    .skip(page - 1 * ITEMS_PER_PAGE)
-    .limit(ITEMS_PER_PAGE)
+    .countDocuments()
+    .then((totalDoc) => {
+      totalDocuments = totalDoc;
+      return Product.find()
+        .skip((pageNumber - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     .then((products) => {
       res.render('shop/all-products.ejs', {
         pageTitle: 'All Products',
         path: '/shop',
         products,
+        totalDocuments,
+        lastPage: Math.ceil(totalDocuments / ITEMS_PER_PAGE),
+        currentPage: pageNumber,
       });
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.httpStatusCode = 500;
+      return next(err);
     })
     .catch((error) => {
       console.log(error);
@@ -181,7 +195,7 @@ exports.getInvoice = async (rex, res, next) => {
   const invoiceName = 'invoice-' + orderId + '.pdf';
   const invoicePath = path.join(
     'src',
-    'module-20',
+    'module-20_21',
     'data',
     'invoices',
     invoiceName

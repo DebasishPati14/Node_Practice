@@ -2,9 +2,8 @@
     <link rel="stylesheet" href="/shop.css">
     </head>
 
-    <body>
+
         <%- include('../layouts/navigation') %>
-            <h3>In Home Page</h3><br />
             <a href='/add-product'>Go To Add Product</a>
             <div class="shop-container">
                 <% if(products.length> 0) {
@@ -43,5 +42,5 @@
                     <% }) } else { %>
                         <h3>No Product is Available</h3>
                         <% } %>
-                            <%- include('../layouts/tail') %>
             </div>
+            <%- include('../layouts/tail') %>

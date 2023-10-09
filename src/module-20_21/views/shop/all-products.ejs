@@ -2,7 +2,7 @@
     <link rel="stylesheet" href="shop.css">
     </head>
 
-    <body>
+
         <%- include('../layouts/navigation') %>
             <h3>In Home Page</h3><br />
             <a href='/add-product'>Go To Add Product</a>
@@ -45,9 +45,16 @@
                         <% } %>
                         <section >
                             <div class="pagination">
-                                <a href="?page=1">1</a>
-                                <a href="?page=2">2</a>
+                                <% if(currentPage != 1) {%>
+                                    <a href="?page=<%= currentPage-1 %>"><%= currentPage-1 %> (Prev)</a>
+                                    <%} %>
+                                    <a style="background-color: blueviolet;color: yellow; font-size: large;" href="?page=1"><%= currentPage %> (Cur)</a>
+                                    <% if(currentPage+1 != lastPage && currentPage != lastPage) {%>
+                                        <a href="?page=<%= currentPage+1 %>"><%= currentPage+1 %>  (Next)</a>
+                                        <% } %>
+                                        
+                                        <a href="?page=<%= lastPage %>"><%= lastPage %> (Last)</a>
+                                    </div>
+                                </section>
                             </div>
-                        </section>
-                            <%- include('../layouts/tail') %>
-            </div>
+                        <%- include('../layouts/tail') %>

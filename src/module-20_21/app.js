@@ -18,7 +18,7 @@ const multer = require('multer');
 
 const fileStorageInformation = multer.diskStorage({
   destination: (err, file, cb) => {
-    cb(null, 'src/module-20/images');
+    cb(null, 'src/module-20_21/images');
   },
   filename: (err, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -45,20 +45,20 @@ app.use(
 );
 app.use(express.static(path.join(__dirname, './public/css')));
 app.use(
-  '/src/module-20/images',
+  '/src/module-20_21/images',
   express.static(path.join(__dirname, './images'))
 );
 app.use(
-  '/admin/src/module-20/images',
+  '/admin/src/module-20_21/images',
   express.static(path.join(__dirname, './images'))
 );
 app.use(
-  '/shop/src/module-20/images',
+  '/shop/src/module-20_21/images',
   express.static(path.join(__dirname, './images'))
 );
 
 const MONGO_DB_URI =
-  'mongodb+srv://Usemy_Node_Practice:ezcYWnvYv4Pdrebn@cluster0.yvpr5b1.mongodb.net/module-15';
+  'mongodb+srv://Usemy_Node_Practice:ezcYWnvYv4Pdrebn@cluster0.yvpr5b1.mongodb.net/module-20';
 
 const mongoStore = MongoDBSessionStore({
   uri: MONGO_DB_URI,
@@ -113,7 +113,7 @@ app.get('/', (req, res, next) => {
 app.get(errorController.get404);
 
 app.use((err, req, res, next) => {
-  console.table(err);
+  console.log(err);
   res.redirect('/500');
 });
 
