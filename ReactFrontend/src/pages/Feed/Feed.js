@@ -51,12 +51,11 @@ class Feed extends Component {
       page--;
       this.setState({ postPage: page });
     }
-    fetch('http://localhost:8080/feed/posts')
+    fetch('http://localhost:8080/feed/posts?page=' + page)
       .then(res => {
         if (res.status !== 200) {
           throw new Error('Failed to fetch posts.');
         }
-        console.log(res);
         return res.json();
       })
       .then(resData => {
@@ -109,6 +108,14 @@ class Feed extends Component {
     });
     const method = "POST";
     // Set up data (with image!)
+
+    const formData = new FormData();
+    formData.append("title", postData.title)
+    formData.append("content", postData.content)
+    formData.append("image", postData.image)
+    formData.append("creator", JSON.stringify({ name: "Name Someone" }))
+
+
     let url = 'http://localhost:8080/feed/post';
     if (this.state.editPost) {
       url = 'URL';
@@ -116,16 +123,18 @@ class Feed extends Component {
 
 
     fetch(url, {
-      method: method, body: JSON.stringify({
-        _id: "2",
-        title: postData.title,
-        creator: {
-          name: "Debasish Pati",
-        },
-        imageUrl: "/images/old-vintage-book.png"
-      }),
-      "Content-Type": "application/json"
-    },
+      method: method, body: formData
+      // body: JSON.stringify({
+      //   title: postData.title, content: postData.content,
+      //   creator: {
+      //     name: "Debasish Pati",
+      //   },
+      //   image: "/images/old-vintage-book.png"
+      // }),
+      // headers: {
+      //   "Content-Type": "application/json"
+      // }
+    }
     )
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
@@ -177,7 +186,9 @@ class Feed extends Component {
 
   deletePostHandler = postId => {
     this.setState({ postsLoading: true });
-    fetch('URL')
+    fetch(`http://localhost:8080/feed/post/${postId}`, {
+      method: 'DELETE',
+    })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error('Deleting a post failed!');
@@ -249,13 +260,13 @@ class Feed extends Component {
               onPrevious={this.loadPosts.bind(this, 'previous')}
               onNext={this.loadPosts.bind(this, 'next')}
               lastPage={Math.ceil(this.state.totalPosts / 2)}
-              currentPage={this.state.postPage}
+              page={this.state.postPage}
             >
               {this.state.posts.map(post => (
                 <Post
                   key={post._id}
                   id={post._id}
-                  author={post.creator.name}
+                  author={post.creator && post.creator.name || ""}
                   date={new Date(post.createdAt).toLocaleDateString('en-US')}
                   title={post.title}
                   image={post.imageUrl}
