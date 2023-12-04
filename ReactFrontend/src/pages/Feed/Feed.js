@@ -22,7 +22,11 @@ class Feed extends Component {
   };
 
   componentDidMount() {
-    fetch('http://localhost:8080/feed/posts')
+    fetch('http://localhost:8080/feed/posts', {
+      headers: {
+        "Authorization": "Bearer " + this.props.token
+      }
+    })
       .then(res => {
         if (res.status !== 200) {
           throw new Error('Failed to fetch user status.');
@@ -51,7 +55,11 @@ class Feed extends Component {
       page--;
       this.setState({ postPage: page });
     }
-    fetch('http://localhost:8080/feed/posts?page=' + page)
+    fetch('http://localhost:8080/feed/posts?page=' + page, {
+      headers: {
+        "Authorization": "Bearer " + this.props.token
+      }
+    })
       .then(res => {
         if (res.status !== 200) {
           throw new Error('Failed to fetch posts.');
@@ -106,24 +114,28 @@ class Feed extends Component {
     this.setState({
       editLoading: true
     });
-    const method = "POST";
+    let method = "POST";
     // Set up data (with image!)
 
     const formData = new FormData();
     formData.append("title", postData.title)
     formData.append("content", postData.content)
     formData.append("image", postData.image)
-    formData.append("creator", JSON.stringify({ name: "Name Someone" }))
 
 
     let url = 'http://localhost:8080/feed/post';
     if (this.state.editPost) {
-      url = 'URL';
+      method = "PATCH"
+      url = 'http://localhost:8080/feed/post/' + this.state.editPost._id;
     }
 
 
     fetch(url, {
-      method: method, body: formData
+      method: method,
+      body: formData,
+      headers: {
+        "Authorization": "Bearer " + this.props.token
+      }
       // body: JSON.stringify({
       //   title: postData.title, content: postData.content,
       //   creator: {
@@ -148,7 +160,7 @@ class Feed extends Component {
           _id: resData.post._id,
           title: resData.post.title,
           content: resData.post.content,
-          creator: resData.post.creator,
+          creator: resData.post.creatorName,
           createdAt: resData.post.createdAt
         };
         this.setState(prevState => {
@@ -188,6 +200,9 @@ class Feed extends Component {
     this.setState({ postsLoading: true });
     fetch(`http://localhost:8080/feed/post/${postId}`, {
       method: 'DELETE',
+      headers: {
+        "Authorization": "Bearer " + this.props.token
+      }
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {

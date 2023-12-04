@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const feedRoute = require('./routes/feed.route');
+const authRoute = require('./routes/auth.route');
 const mongoose = require('mongoose');
 const path = require('path');
 const multer = require('multer');
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/feed', feedRoute);
+app.use('/auth', authRoute);
 
 app.use((error, req, res, next) => {
   const status = error.setStatus || 500;

@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, default: mongoose } = require('mongoose');
 
 const postSchema = new Schema(
   {
@@ -11,10 +11,9 @@ const postSchema = new Schema(
       required: true,
     },
     creator: {
-      name: {
-        type: String,
-        required: true,
-      },
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
     imageUrl: {
       type: String,
