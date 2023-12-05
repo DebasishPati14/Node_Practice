@@ -1,0 +1,101 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative; width: 100%;}
+
+.index-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.centered-button {
+  margin: 10px;
+}
+
+nav {
+  background-color: #773df5;
+  overflow: hidden;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  float: left;
+}
+
+nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav li a:hover {
+  background-color: #9b80db;
+}
+
+nav .active {
+  color: #ffee00;
+}
+
+.user-message {
+  margin: 5px auto;
+  width: 40%;
+  border: 1px solid #4771fa;
+  border-radius: 3px;
+  background: #b9c9ff;
+  text-align: center;
+}
+
+.user-message--error {
+  border-color: red;
+  background: rgb(255, 176, 176);
+  color: red;
+}
+
+.pagination {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: #00695c;
+  padding: 0.8rem;
+  font-size: 14px;
+  border: 1px solid #773df5;
+  border-radius: 5px;
+  margin: 0 1rem;
+}
+
+.pagination a:hover,
+.pagination a:active {
+  background: #773df5;
+  color: white;
+}
+
+.footer {
+  background-color: #773df5;
+  color: #fff;
+  text-align: center;
+  margin: 10px 0;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 98%;
+}

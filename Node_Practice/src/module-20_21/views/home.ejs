@@ -1,0 +1,18 @@
+<%- include('./layouts/head.ejs') %>
+    <link rel="stylesheet" href="/style.css">
+
+    </head>
+
+    <%- include('./layouts/navigation') %>
+        <% if (successMessage) {%>
+            <div class="user-message">
+                <p><%=  successMessage %></p>
+            </div>
+        <%}%>
+        <div class="index-button-container">
+            <div class="container">
+                <a href="/shop"> <button class="centered-button">Shop</button> </a>
+                <a href="/auth/login"> <button class="centered-button">Go To Auth</button> </a>
+            </div>
+        </div>
+        <%- include('./layouts/tail') %>

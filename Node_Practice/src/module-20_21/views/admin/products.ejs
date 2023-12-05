@@ -1,0 +1,46 @@
+<%- include('../layouts/head') %>
+    <link rel="stylesheet" href="/shop.css">
+    </head>
+
+
+        <%- include('../layouts/navigation') %>
+            <a href='/add-product'>Go To Add Product</a>
+            <div class="shop-container">
+                <% if(products.length> 0) {
+                    products.forEach(product => { %>
+                    <div class="mini-card">
+                        <img alt="<%= product.title %>" src='<%= product.imageUrl %>'>
+                        <h2>
+
+                            <%= product.title %>
+                        </h2>
+                        <span>
+                            <%= product.description.length < 100 ? product.description :
+                                product.description.substr(0,100) + "..." %>
+                        </span>
+                        <span>
+                            Rs. <%= product.price %> /-
+                        </span>
+                        <div>
+                            <!-- <form action="/admin/edit-product" method="POST"> -->
+
+                            <a href="/admin/edit-product?productId=<%= product._id %>">
+                                <button type="submit">Edit</button>
+                            </a>
+
+                            <!-- </form> -->
+                            <form action="/admin/delete-product" method="POST">
+                                <input type="hidden" name="_csrf" value="<%= csrf %>">
+                                <button type="submit">Delete</button>
+                                <input type='hidden' name='imageUrl' id="edit-product"
+                                    value="<%= product.imageUrl %>" />
+                                <input type='hidden' name='productId' id="edit-product"
+                                    value="<%= product._id %>" /><br><br>
+                            </form>
+                        </div>
+                    </div>
+                    <% }) } else { %>
+                        <h3>No Product is Available</h3>
+                        <% } %>
+            </div>
+            <%- include('../layouts/tail') %>

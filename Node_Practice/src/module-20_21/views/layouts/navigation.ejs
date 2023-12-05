@@ -1,0 +1,92 @@
+<nav>
+  <ul>
+    <li>
+      <a class="<%= path === '/' ? 'active' : ''%>" href="/">Home</a>
+    </li>
+
+    <li>
+      <a class="<%= path === '/shop' ? 'active' : ''%>" href="/shop">Shop</a>
+    </li>
+
+    <li>
+      <a
+        class="<%= path.includes('/shop/product-details') ? 'active' : ''%>"
+        href="/shop/product-details/6504a6459bf3b4ed69502e84"
+        >Product</a
+      >
+    </li>
+
+
+    <% if (isAuthenticated) {%>
+    <li>
+      <a class="<%= path === '/admin' ? 'active' : ''%>" href="/admin">Admin</a>
+    </li>
+
+    <li>
+      <a
+        class="<%= path === '/admin/add-product' ? 'active' : ''%>"
+        href="/admin/add-product"
+        >Add product</a
+      >
+    </li>
+
+    <li>
+      <a
+        class="<%= path === '/admin/products' ? 'active' : ''%>"
+        href="/admin/products"
+        >All product</a
+      >
+    </li>
+
+   
+
+    <li>
+      <a class="<%= path === '/shop/cart' ? 'active' : ''%>" href="/shop/cart"
+        >Cart</a
+      >
+    </li>
+
+
+
+    <li>
+      <a
+        class="<%= path === '/shop/checkout' ? 'active' : ''%>"
+        href="/shop/checkout"
+        >Checkout</a
+      >
+    </li>
+
+    <li>
+      <a
+        class="<%= path === '/shop/orders' ? 'active' : ''%>"
+        href="/shop/orders"
+        >Orders
+        </a>
+    </li>
+
+    <% }%>
+    <% if (!isAuthenticated) {%>
+      <li style="float: right">
+      <a class="<%= path === '/auth/login' ? 'active' : ''%>" href="/auth/login">Login</a>
+      </li>
+      <li style="float: right">
+      <a class="<%= path === '/auth/signup' ? 'active' : ''%>" href="/auth/signup">Signup</a>
+      </li>
+      <% } else { %>
+      <form action="/auth/logout" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <button
+          type="submit"
+          style="background: none; border: none; cursor: pointer"
+          href="/"
+        >
+          Logout
+        </button>
+      </form>
+      <% }%>
+    </li>
+  </ul>
+</nav>
+<body>
+  <div style="position: relative; width: 100%;min-height: 100%;">
+

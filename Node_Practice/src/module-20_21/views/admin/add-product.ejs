@@ -1,0 +1,31 @@
+<%- include('../layouts/head') %>
+    <link rel="stylesheet" href="/admin.css">
+    </head>
+
+        <%- include('../layouts/navigation') %>
+        <% if (errorMessage && errorMessage.length > 0) {%>
+            <% errorMessage.forEach(error =>{%>
+                <div class="user-message user-message--error">
+                    <p><%=  error %></p>
+                </div>
+            <% })  %>
+        <% } %>
+            <h3>In Admin Page</h3><br />
+            <form action='/admin/add-product' class="main-form" method='POST' enctype="multipart/form-data"><br>
+                <label for="title">Title</label>
+                <input type='text' name='title' value="<%= oldValues ? oldValues.title || '' : ''%>" id="title" />
+
+                <label for="image">Image URL</label>
+                <!-- <input type='text' name='imageUrl' value="<%= oldValues ? oldValues.imageUrl || '' : ''%>" id="imageUrl" /><br> -->
+                <input type='file' name='image'  id="image" /><br>
+
+                <label for="price">Price</label>
+                <input type='text' name='price' value="<%= oldValues ? oldValues.price || '' : ''%>" id="price" /><br>
+
+                <label for="description">Description</label>
+                <textarea type='text' name='description'  style="border-radius: 5px;" id="description" rows="5"> <%= oldValues ? oldValues.description || '' : ''%></textarea><br>
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
+                <button type='submit'>Add Product</button>
+            </form>
+
+            <%- include('../layouts/tail') %>

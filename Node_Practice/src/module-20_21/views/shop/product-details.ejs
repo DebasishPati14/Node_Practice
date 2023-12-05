@@ -1,0 +1,36 @@
+<%- include('../layouts/head') %>
+    <link rel="stylesheet" href="/shop.css">
+    <link rel="stylesheet" href="/product-details.css">
+
+    </head>
+
+
+        <%- include('../layouts/navigation') %>
+            <% if(product) { %>
+                <div class="card">
+                    <h2>
+                        <%= product.title %>
+                    </h2>
+                    <img src="/<%= product.imageUrl %>" alt="Heading Image">
+                    <div class="card-content">
+                        <p>
+                            <%= product.description %>
+                        </p>
+                        <p class="price">
+                            RS. <%= product.price %>/-
+                        </p>
+                        <% if (isAuthenticated) {%>
+
+                        <form action="/shop/cart" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrf %>">
+                            <input type="hidden" name="productId" value="<%= product._id %>">
+                            <input type="hidden" name="price" value="<%= product.price %>">
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                        <%}%>
+                    </div>
+                </div>
+                <% } %>
+
+
+                    <%- include('../layouts/tail') %>

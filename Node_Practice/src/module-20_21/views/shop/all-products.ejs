@@ -1,0 +1,60 @@
+<%- include('../layouts/head') %>
+    <link rel="stylesheet" href="shop.css">
+    </head>
+
+
+        <%- include('../layouts/navigation') %>
+            <h3>In Home Page</h3><br />
+            <a href='/add-product'>Go To Add Product</a>
+            <div class="shop-container">
+                <% if( products && products.length> 0) {
+                    products.forEach(product => { %>
+                    <div class="mini-card">
+                        <img alt="<%= product.title %>" src='<%= product.imageUrl %>'>
+                        <h2>
+
+                            <%= product.title %>
+                        </h2>
+                        <span>
+                            <%= product.description.length < 100 ? product.description :
+                                product.description.substr(0,100) + "..." %>
+                        </span>
+                        <span>
+                            Rs. <%= product.price %> /-
+                        </span>
+                        <div>
+                            <a href="/shop/checkout">
+                                <button>Checkout</button>
+                            </a>
+                            <a href="/shop/product-details/<%= product._id %>">
+                                <button>Details</button>
+                            </a>
+                            <% if (isAuthenticated) {%>
+
+                            <form action="/shop/cart" method="POST">
+                                <input type="hidden" name="_csrf" value="<%= csrf %>">
+                                <input type="hidden" name="productId" value="<%= product._id %>">
+                                <input type="hidden" name="price" value="<%= product.price %>">
+                                <button type="submit">Add to Cart</button>
+                            </form>
+                            <%}%>
+                        </div>
+                    </div>
+                    <% }) } else { %>
+                        <h3>No Product is Available</h3>
+                        <% } %>
+                        <section >
+                            <div class="pagination">
+                                <% if(currentPage != 1) {%>
+                                    <a href="?page=<%= currentPage-1 %>"><%= currentPage-1 %> (Prev)</a>
+                                    <%} %>
+                                    <a style="background-color: blueviolet;color: yellow; font-size: large;" href="?page=1"><%= currentPage %> (Cur)</a>
+                                    <% if(currentPage+1 != lastPage && currentPage != lastPage) {%>
+                                        <a href="?page=<%= currentPage+1 %>"><%= currentPage+1 %>  (Next)</a>
+                                        <% } %>
+                                        
+                                        <a href="?page=<%= lastPage %>"><%= lastPage %> (Last)</a>
+                                    </div>
+                                </section>
+                            </div>
+                        <%- include('../layouts/tail') %>
